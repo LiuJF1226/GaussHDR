@@ -54,7 +54,8 @@ We provide demo videos of novel HDR and LDR renderings for four scenes. For more
 
 
 
-
+## Codes
+We will realease the codebase of GaussHDR and our preprocessed data soon. Stay tuned.
 
 
 
