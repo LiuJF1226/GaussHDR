@@ -21,13 +21,12 @@
 
 <br>
 
-![teaser](https://github.com/user-attachments/assets/c3a293d1-4495-4b71-ac9d-804ce5628bfd)
-
+![teaser](https://github.com/user-attachments/assets/ed670fcb-8e5a-4f2c-860c-46d520c584b7)
 
 ## Abstract
 High dynamic range (HDR) novel view synthesis (NVS) aims to reconstruct HDR scenes by leveraging multi-view low dynamic range (LDR) images captured at different exposure levels. Current training paradigms with 3D tone mapping often result in unstable HDR reconstruction, while training with 2D tone mapping reduces the model's capacity to fit LDR images. Additionally, the global tone mapper used in existing methods can impede the learning of both HDR and LDR representations. To address these challenges, we present GaussHDR, which unifies 3D and 2D local tone mapping through 3D Gaussian splatting. Specifically, we design a residual local tone mapper for both 3D and 2D tone mapping that accepts an additional context feature as input. We then propose combining the dual LDR rendering results from both 3D and 2D local tone mapping at the loss level. Finally, recognizing that different scenes may exhibit varying balances between the dual results, we introduce uncertainty learning and use the uncertainties for adaptive modulation. Extensive experiments demonstrate that GaussHDR significantly outperforms state-of-the-art methods in both synthetic and real-world scenarios.
 
-![framework](https://github.com/user-attachments/assets/3f9008d1-8134-4e19-aeb3-152fb7d4339f)
+![framework](https://github.com/user-attachments/assets/1fd2c4ff-b372-4696-bf8e-e96b79b3e03c)
 
 
 ## Demo Videos
