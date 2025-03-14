@@ -13,7 +13,7 @@
 </p>
 
 <div align="center">
-    <a href=><img src='https://img.shields.io/badge/ArXiv-Paper-b31b1b.svg'></a>  
+    <a href='https://arxiv.org/abs/2503.10143'><img src='https://img.shields.io/badge/ArXiv-Paper-b31b1b.svg'></a>  
     <a href='https://liujf1226.github.io/GaussHDR/'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  
     <a href=''><img src='https://img.shields.io/badge/Preprocessed-Data-blue'></a>  
 </div>
