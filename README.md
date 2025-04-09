@@ -22,16 +22,6 @@
 
 <br>
 
-![teaser](https://github.com/user-attachments/assets/ed670fcb-8e5a-4f2c-860c-46d520c584b7)
-
-## Abstract
-High dynamic range (HDR) novel view synthesis (NVS) aims to reconstruct HDR scenes by leveraging multi-view low dynamic range (LDR) images captured at different exposure levels. Current training paradigms with 3D tone mapping often result in unstable HDR reconstruction, while training with 2D tone mapping reduces the model's capacity to fit LDR images. Additionally, the global tone mapper used in existing methods can impede the learning of both HDR and LDR representations. To address these challenges, we present GaussHDR, which unifies 3D and 2D local tone mapping through 3D Gaussian splatting. Specifically, we design a residual local tone mapper for both 3D and 2D tone mapping that accepts an additional context feature as input. We then propose combining the dual LDR rendering results from both 3D and 2D local tone mapping at the loss level. Finally, recognizing that different scenes may exhibit varying balances between the dual results, we introduce uncertainty learning and use the uncertainties for adaptive modulation. Extensive experiments demonstrate that GaussHDR significantly outperforms state-of-the-art methods in both synthetic and real-world scenarios.
-
-![framework](https://github.com/user-attachments/assets/1fd2c4ff-b372-4696-bf8e-e96b79b3e03c)
-
-
-## Demo Videos
-We provide demo videos of novel HDR and LDR renderings for four scenes. For more qualitative comparisons, please refer to our paper and project page.
 
 <table align="center">
   <tr>
@@ -54,13 +44,123 @@ We provide demo videos of novel HDR and LDR renderings for four scenes. For more
 
 
 
-## Codes
-We will realease the codebase of GaussHDR and our preprocessed data soon. Stay tuned.
+## Setup
+### Clone the repo
+```shell
+git clone https://github.com/LiuJF1226/GaussHDR.git --recursive
+cd GaussHDR
+```
+### Install dependencies
+```shell
+conda create -n gausshdr python=3.9
+conda activate gausshdr
 
+pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+pip install --no-index torch-scatter -f https://pytorch-geometric.com/whl/torch-1.12.1+cu113.html
+
+pip install submodules/diff-gaussian-rasterization
+pip install submodules/simple-knn
+pip install -r requirements.txt
+```
+
+## Data
+The datasets employed in this project stem from [HDR-NeRF](https://github.com/xhuangcv/hdr-nerf) (real and synthetic) and [HDR-Plenoxels](https://github.com/kaist-ami/HDR-Plenoxels) (real). We preprocess the data through COLMAP to make it suitable for GS training. Please download our preprocessed data from [Google Drive](https://drive.google.com/file/d/1SZYoikKiCvBdGnWmJ1qHtGuspub_LkV4/view?usp=drive_link). Then, you can unzip it to any directory you like, for example in folder ```GaussHDR/datasets/```. The data structure will be organised as follows:
+
+```
+datasets/
+├── HDR-NeRF-real/
+│   ├── box/
+│   │   ├── images
+│   │   │   ├── xxxx.jpg
+│   │   │   ├── xxxx.jpg
+│   │   │   ├── ...
+│   │   ├── sparse/
+│   │   |   └──0/
+|   |   └── exposure.json
+│   ├── ...
+│   ├── ...
+├── HDR-NeRF-syn/  
+│   ├── bathroom/
+│   │   ├── images
+│   │   │   ├── xxxx.png
+│   │   │   ├── xxxx.png
+│   │   │   ├── ...
+│   │   ├── images_hdr
+│   │   │   ├── xxxx.exr
+│   │   │   ├── xxxx.exr
+│   │   │   ├── ...
+│   │   ├── sparse/
+│   │   |   └──0/
+|   |   └── exposure.json
+│   ├── ...
+│   ├── ...
+├── HDR-Plenoxels-real/ 
+│   ├── character/
+│   │   ├── images
+│   │   │   ├── xxxx.jpg
+│   │   │   ├── xxxx.jpg
+│   │   │   ├── ...
+│   │   ├── sparse/
+│   │   |   └──0/
+|   |   └── exposure.json
+│   ├── ...
+│   ├── ...
+```
+## Training
+### Training on a single scene
+If you want to train on a single scene for a quick start, you can use following commands.
+```shell
+# HDR-NeRF-syn data (bathroom)
+python train.py --gpu 0 -s datasets/HDR-NeRF-syn/bathroom/ -m logs_exp3/HDR-NeRF-syn/bathroom -r 2 -d synthetic --voxel_size 0.001 --update_init_factor 16 --gamma 0.5 --exp_mode 3 
+
+# HDR-NeRF-real data (box)
+python train.py --gpu 0 -s datasets/HDR-NeRF-real/box/ -m logs_exp3/HDR-NeRF-real/box -r 4 -d real --voxel_size 0.001 --update_init_factor 16 --gamma 0.2 --exp_mode 3 
+
+# HDR-Plenoxels-real data (coffee)
+python train.py --gpu 0 -s datasets/HDR-Plenoxels-real/coffee/ -m logs_exp3/HDR-Plenoxels-real/coffee -r 6 -d real --voxel_size 0.001 --update_init_factor 16 --gamma 0.2 --exp_mode 3 
+```
+- gpu: specify the GPU id to run the code.
+- source_path (s): data path of the training scene.
+- model_path (m): logging path.
+- resolution (r): training resolution.
+- data_type (d): training data type (synthetic or real).
+- voxel_size: from [Scaffold-GS](https://github.com/city-super/Scaffold-GS), size for voxelizing the SfM points, smaller value denotes finer structure and higher overhead, '0' means using the median of each point's 1-NN distance as the voxel size.
+- update_init_factor: from [Scaffold-GS](https://github.com/city-super/Scaffold-GS), initial resolution for growing new anchors. A larger one will start placing new anchor in a coarser resolution.
+- gamma: the weight of global tone-mapping loss term.
+- exp_mode: training exposure setting, to be 1 or 3. Exp-1 means only one exposure is used for each view during training (following HDR-NeRF), while Exp-3 means all three exposures are accessible during training (alighing with HDR-GS).
+
+### Training on multiple scenes
+We also provide the scripts to train on all the scenes at one time.
+ - HDR-NeRF-syn: ```train_hdrnerf_syn.sh```
+ - HDR-NeRF-real: ```train_hdrnerf_real.sh```
+ - HDR-Plenoxels-real: ```train_hdrplenoxels_real.sh```
+
+Run them with ```bash train_xxx.sh```.
+
+> Notice 1: You can either use sequential training or parallel training by commenting out/uncomment corresponding parts in the ```train_xxx.sh``` files. Some hyper-parameters and training settings can be also modified in these files.
+
+ > Notice 2: For parallel training, make sure you have enough GPU cards and memories to run these scenes at the same time. Each process occupies many cpu cores, which may slow down the training process. Set ```torch.set_num_threads(32)``` accordingly in the ```train.py``` to alleviate it.
+
+## Evaluation
+
+### Evaluation after training
+ > Notice: Above training scripts will also generate LDR/HDR renderings, compute and log error metrics. Therefore, you may ignore this part.
+
+After training, you can generate rendering results, compute and log error metrics for a trained scene as follows. 
+```shell
+python render.py -m <logging path to a trained scene> --gpu 0 # Generate renderings
+python metrics.py -m <logging path to a trained scene> --gpu 0 # Compute and log error metrics on renderings
+```
+
+### Evaluation on pretrained models
+We also provide our pretrained [models](https://drive.google.com/file/d/1uaBfv_9boxl9pl3IMED5WIGcbsZMjUS9/view?usp=drive_link) that correspond to the metrics in paper, including ```exp1_models (exp_mode=1)``` and ```exp3_models (exp_mode=3)```. You can first download and unzip them to some path. Then, run the following commands. 
+```shell
+python render.py -m <pretrained model path to a scene> -s <data path to this scene> --gpu 0 # Generate renderings
+python metrics.py -m <pretrained model path to a scene> --gpu 0 # Compute and log error metrics on renderings
+```
 
 
 ## Citation
-
 ```BibTeX
 @inproceedings{gausshdr,
      title={GaussHDR: High Dynamic Range Gaussian Splatting via Learning Unified 3D and 2D Local Tone Mapping},
@@ -69,3 +169,5 @@ We will realease the codebase of GaussHDR and our preprocessed data soon. Stay t
      year={2025}
      }
 ```
+## Acknowledgement
+This repo is mainly based on [Scaffold-GS](https://github.com/city-super/Scaffold-GS). We thank all authors from [3DGS](https://github.com/graphdeco-inria/gaussian-splatting) and [Scaffold-GS](https://github.com/city-super/Scaffold-GS) for presenting such excellent works. 

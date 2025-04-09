@@ -1,0 +1,9 @@
+matplotlib
+einops
+plyfile==0.8.1
+jaxtyping
+opencv-python
+tqdm
+imageio
+imageio-ffmpeg
+numpy==1.26.4
