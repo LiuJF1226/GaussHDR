@@ -47,7 +47,7 @@
 ## Setup
 ### Clone the repo
 ```shell
-git clone https://github.com/LiuJF1226/GaussHDR.git
+git clone https://github.com/LiuJF1226/GaussHDR.git --recursive
 cd GaussHDR
 ```
 ### Install dependencies
@@ -137,26 +137,24 @@ We also provide the scripts to train on all the scenes at one time.
 
 Run them with ```bash train_xxx.sh```.
 
-> Notice 1: You can either use sequential training or parallel training by commenting out/uncomment corresponding parts in the ```train_xxx.sh``` files. Some hyper-parameters and training settings can be also modified in these files.
-
- > Notice 2: For parallel training, make sure you have enough GPU cards and memories to run these scenes at the same time. Each process occupies many cpu cores, which may slow down the training process. Set ```torch.set_num_threads(32)``` accordingly in the ```train.py``` to alleviate it.
+> Notice: You can either use sequential training or parallel training by commenting out/uncomment corresponding parts in the ```train_xxx.sh``` files. Some hyper-parameters and training settings can be also modified in these files. For parallel training, make sure you have enough GPU cards and memories to run these scenes at the same time. 
 
 ## Evaluation
 
 ### Evaluation after training
- > Notice: Above training scripts will also generate LDR/HDR renderings, compute and log error metrics. Therefore, you may ignore this part.
+ > Notice: Above training scripts will also generate LDR/HDR renderings, compute and log error metrics during training process. Therefore, you may ignore this part.
 
 After training, you can generate rendering results, compute and log error metrics for a trained scene as follows. 
 ```shell
-python render.py -m <logging path to a trained scene> --gpu 0 # Generate renderings
-python metrics.py -m <logging path to a trained scene> --gpu 0 # Compute and log error metrics on renderings
+python render.py -m <logging path of a trained scene> --gpu 0 # Generate renderings
+python metrics.py -m <logging path of a trained scene> --gpu 0 # Compute and log error metrics on renderings
 ```
 
 ### Evaluation on pretrained models
-We also provide our pretrained [models](https://drive.google.com/file/d/1uaBfv_9boxl9pl3IMED5WIGcbsZMjUS9/view?usp=drive_link) that correspond to the metrics in paper, including ```exp1_models (exp_mode=1)``` and ```exp3_models (exp_mode=3)```. You can first download and unzip them to some path. Then, run the following commands. 
+We also provide our pretrained [models](https://drive.google.com/file/d/1uaBfv_9boxl9pl3IMED5WIGcbsZMjUS9/view?usp=drive_link) that correspond to the metrics in paper, including ```exp1_models (exp_mode=1)``` and ```exp3_models (exp_mode=3)```. You can first download and unzip them to any directory. Then, run the following commands. 
 ```shell
-python render.py -m <pretrained model path to a scene> -s <data path to this scene> --gpu 0 # Generate renderings
-python metrics.py -m <pretrained model path to a scene> --gpu 0 # Compute and log error metrics on renderings
+python render.py -m <pretrained model path of a scene> -s <data path of this scene> --gpu 0 # Generate renderings
+python metrics.py -m <pretrained model path of a scene> --gpu 0 # Compute and log error metrics on renderings
 ```
 
 
