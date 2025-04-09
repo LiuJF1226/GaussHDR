@@ -53,7 +53,7 @@ class ModelParams(ParamGroup):
         self.update_depth = 3
         self.update_init_factor = 16
         self.update_hierachy_factor = 4
-        self.gamma = 0.0
+        self.gamma = 0.2
         self.use_feat_bank = False
         self._source_path = ""
         self._model_path = ""
