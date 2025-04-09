@@ -47,7 +47,7 @@
 ## Setup
 ### Clone the repo
 ```shell
-git clone https://github.com/LiuJF1226/GaussHDR.git --recursive
+git clone https://github.com/LiuJF1226/GaussHDR.git
 cd GaussHDR
 ```
 ### Install dependencies
