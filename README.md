@@ -127,7 +127,7 @@ python train.py --gpu 0 -s datasets/HDR-Plenoxels-real/coffee/ -m logs_exp3/HDR-
 - voxel_size: from [Scaffold-GS](https://github.com/city-super/Scaffold-GS), size for voxelizing the SfM points, smaller value denotes finer structure and higher overhead, '0' means using the median of each point's 1-NN distance as the voxel size.
 - update_init_factor: from [Scaffold-GS](https://github.com/city-super/Scaffold-GS), initial resolution for growing new anchors. A larger one will start placing new anchor in a coarser resolution.
 - gamma: the weight of global tone-mapping loss term.
-- exp_mode: training exposure setting, to be 1 or 3. Exp-1 means only one exposure is used for each view during training (following [HDR-NeRF](https://github.com/xhuangcv/hdr-nerf)), while Exp-3 means all three exposures are accessible during training (alighing with [HDR-GS](https://github.com/caiyuanhao1998/HDR-GS)).
+- exp_mode: training exposure setting, to be 1 or 3. Exp-1 means only one exposure is used for each view during training (following [HDR-NeRF](https://github.com/xhuangcv/hdr-nerf)), while Exp-3 means all three exposures are accessible during training (aligning with [HDR-GS](https://github.com/caiyuanhao1998/HDR-GS)).
 
 ### Training on multiple scenes
 We also provide the scripts to train on all the scenes at one time.
