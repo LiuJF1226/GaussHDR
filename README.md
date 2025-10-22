@@ -159,6 +159,7 @@ python metrics.py -m <pretrained model path of a scene> --gpu 0 # Compute and lo
 
 
 ## Citation
+If you find our work helpful to your research, please cite our paper:
 ```BibTeX
 @inproceedings{gausshdr,
      title={GaussHDR: High Dynamic Range Gaussian Splatting via Learning Unified 3D and 2D Local Tone Mapping},
