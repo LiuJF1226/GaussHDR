@@ -3,7 +3,7 @@
 <h3 align="center">CVPR 2025</h3>
 
 <p align="center">
-    <a href="https://scholar.google.com/citations?hl=en&user=-moPItwAAAAJ">Jinfeng Liu</a><sup>1</sup>,</span>
+    <a href="https://liujf1226.github.io/">Jinfeng Liu</a><sup>1</sup>,</span>
     <a href="https://scholar.google.com/citations?hl=en&user=KKzKc_8AAAAJ">Lingtong Kong</a><sup>2</sup>,
     <a href="https://libraboli.github.io/">Li Bo</a><sup>2</sup>,
     <a href="https://www.danxurgb.net/">Dan Xu</a><sup>1</sup>
